@@ -5,12 +5,8 @@ let ctx = canvas.getContext('2d');
 //Высота и ширина канвы
 let heightWindow = canvas.height;
 let widthWindow = canvas.width;
-
-//Функция отрисовки графики
-function Draw(){
-	//Чистим экран
-	ctx.clearRect(0, 0, widthWindow, heightWindow);
-}
+//Ссылка на gameLoop
+let mainLoop;
 
 let programExecute = true;
 let input = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -20,8 +16,7 @@ let memory = [null, null, null, null, null, 0];
 let takeValue = null;
 
 //let code = ["label2", "input", "copyto 2", "copyfrom 3", "label1", "inc 1", "dec 2", "if zero label1", "if negative label2", "jump label3", "add", "sub", "output", "label3"]
-
-let program = ["label1", "input", "copyto 1", "input", "output", "copyfrom 1", "output", "jump label1"];
+//let program = ["label1", "input", "copyto 1", "input", "output", "copyfrom 1", "output", "jump label1"];
 
 //Интерпретация пользовательского алгоритма
 function Parser(code){
@@ -178,5 +173,72 @@ function Parser(code){
 	} while(programStart != 0 && programExecute)
 }
 
-Parser(program);
-console.log(output);
+//Parser(program);
+//console.log(output);
+
+let x = 10;
+let y = 10;
+
+//Определяем функцию requestAnimationFrame для данного браузера, иначе возвращаем простой таймер
+let nextAnimationFrame = (function(){
+	return  window.requestAnimationFrame       || 
+			window.webkitRequestAnimationFrame || 
+			window.mozRequestAnimationFrame    || 
+			window.oRequestAnimationFrame      || 
+			window.msRequestAnimationFrame     || 
+			function(callback){
+				window.setTimeout(callback, 1000 / 60);
+			};
+  })();
+
+//Функция запускающая игру
+function gameStart(callback){
+	setMainLoop(callback);
+	gameStep();
+}
+
+//Устанавливаем необходимый игровой цикл как текущий
+function setMainLoop(loop){
+	mainLoop = loop;
+}
+
+//Функция запускает игровой цикл
+function gameStep(){
+	mainLoop();
+	nextAnimationFrame(gameStep);
+}
+
+//Инициализация игры
+function initGame(){
+
+}
+
+//Функция отрисовки графики
+function drawGame(){
+	//Чистим экран
+	ctx.clearRect(0, 0, widthWindow, heightWindow);
+
+	ctx.fillStyle = "black";
+	ctx.fillRect(x, y, 50, 50);
+}
+
+//Обновление игровой логики
+function updateGame(){
+	x += 1;
+}
+
+//Главный игровой цикл
+function gameLoop(){
+	//Производим обновление игровой логики
+	updateGame();
+	//Отрисовываем все изменения
+	drawGame();
+}
+
+//После того как страница полностью загрузится запускаем нашу игру
+window.onload = function() {
+	//Инициализация игры
+	initGame();
+	//Запуск игры
+	gameStart(gameLoop);
+};
