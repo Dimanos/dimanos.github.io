@@ -73,4 +73,14 @@ window.onload = function() {
 	initGame();
 	//Запуск игры
 	gameStart(gameLoop);
+
+	let rgb = { r: 178, g: 239, b:71 };
+	let fillColor = rgb2str(rgb);
+	console.log(fillColor);
+	let hsv = rgb2hsv(rgb);
+	console.log(hsv);
+	let newHsv = { h: hsv.h, s: hsv.s, v: hsv.v * 0.35 };
+	console.log(newHsv);
+	let strokeColor = rgb2str(hsv2rgb(newHsv));
+	console.log(strokeColor);
 };
