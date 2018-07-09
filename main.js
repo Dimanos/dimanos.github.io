@@ -1,12 +1,12 @@
 //Элемент канва
-var canvas = document.getElementById("canvas");
+let canvas = document.getElementById("canvas");
 //Контекст рисования
-var ctx = canvas.getContext('2d');
+let ctx = canvas.getContext('2d');
 //Высота и ширина канвы
-var heightWindow = canvas.height;
-var widthWindow = canvas.width;
+let heightWindow = canvas.height;
+let widthWindow = canvas.width;
 //Ссылка на gameLoop
-var mainLoop;
+let mainLoop;
 
 let x = 10;
 let y = 10;

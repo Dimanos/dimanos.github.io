@@ -1,9 +1,9 @@
-//let programExecute = true;
-//let input = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-//let test =  [1, 0, 3, 2, 5, 4, 7, 6, 9, 8];
-//let output = [];
-//let memory = [null, null, null, null, null, 0];
-//let takeValue = null;
+let programExecute = true;
+let input = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+let test =  [1, 0, 3, 2, 5, 4, 7, 6, 9, 8];
+let output = [];
+let memory = [null, null, null, null, null, 0];
+let takeValue = null;
 
 //let code = ["label2", "input", "copyto 2", "copyfrom 3", "label1", "inc 1", "dec 2", "if zero label1", "if negative label2", "jump label3", "add", "sub", "output", "label3"]
 //let program = ["label1", "input", "copyto 1", "input", "output", "copyfrom 1", "output", "jump label1"];
