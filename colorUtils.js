@@ -1,65 +1,116 @@
-function rgb2hsv(rgb) {
-    let r = rgb.r / 255.0;
-    let g = rgb.g / 255.0;
-    let b = rgb.b / 255.0;
-
-    let h, s, v;
-  
-    let max = Math.max(r, g, b);
-    let min = Math.min(r, g, b);
-
-    if (max === min){
-        h = 0.0;
-    } else if (max === r && g >= b){
-        h = 60.0 * (g - b) / (max - min);
-    } else if (max === r && g < b){
-        h = 60.0 * (g - b) / (max - min) + 360.0;
-    } else if (max === g){
-        h = 60.0 * (b - r) / (max - min) + 120.0;
-    } else if (max === b){
-        h = 60.0 * (r - g) / (max - min) + 240.0;
+class RGB{
+    constructor(r = 0, g = 0, b = 0){
+        this._r = Math.floor(r) > 255 ? 255 : Math.floor(r);
+        this._g = Math.floor(g) > 255 ? 255 : Math.floor(g);
+        this._b = Math.floor(b) > 255 ? 255 : Math.floor(b);
     }
 
-    if (max === 0){
-        s = 0;
-    }else{
-        s = (1.0 - min / max) * 100.0;
+    get r(){
+        return this._r;
     }
 
-    v = max * 100.0;
-  
-    return {h: h, s: s, v: v};
+    get g(){
+        return this._g;
+    }
+
+    get b(){
+        return this._b;
+    }
+
+    set r(value){
+        this._r = Math.floor(value) > 255 ? 255 : Math.floor(value);
+    }
+
+    set g(value){
+        this._g = Math.floor(value) > 255 ? 255 : Math.floor(value);
+    }
+
+    set b(value){
+        this._b = Math.floor(value) > 255 ? 255 : Math.floor(value);
+    }
+
+    toHSV(){
+        let r = this._r / 255.0;
+        let g = this._g / 255.0;
+        let b = this._b / 255.0;
+        let max = Math.max(r, g, b);
+        let min = Math.min(r, g, b);
+        let h, s, v = max;
+        let d = max - min;
+        s = max === 0 ? 0 : d / max;
+    
+        if (max == min) {
+            h = 0.0;
+        } else {
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6.0 : 0); break;
+                case g: h = (b - r) / d + 2.0; break;
+                case b: h = (r - g) / d + 4.0; break;
+        }
+        
+            h /= 6.0;
+        }
+    
+        return new HSV(h, s, v);
+    }
+
+    toHexString(){
+        return "#" + this._r.toString(16) + this._g.toString(16) + this._b.toString(16);
+    }
 }
 
-function hsv2rgb(hsv) {
-    let h = Math.round(hsv.h);
-    let s = Math.round(hsv.s);
-    let v = Math.round(hsv.v);
-    let r, g, b;
-  
-    let Hi = (h / 60) % 6;
-    let Vmin = ((100 - s) * v) / 100;
-    let a = (v - Vmin) * ((h % 60) / 60);
-    let Vinc = Vmin + a;
-    let Vdec = v - a;
-
-    v = Math.round(v * 2.55);
-    Vmin = Math.round(Vmin * 2.55);
-    Vinc = Math.round(Vinc * 2.55);
-    Vdec = Math.round(Vdec * 2.55);
-  
-    switch (Hi) {
-        case 0: r = v;    g = Vinc; b = Vmin; break;
-        case 1: r = Vdec; g = v;    b = Vmin; break;
-        case 2: r = Vmin; g = v;    b = Vinc; break;
-        case 3: r = Vmin; g = Vdec; b = v; break;
-        case 4: r = Vinc; g = Vmin; b = v; break;
-        case 5: r = v;    g = Vmin; b = Vdec; break;
+class HSV{
+    constructor(h = 0.0, s = 0.0, v = 0.0){
+        this._h = h > 1.0 ? 1.0 : h;
+        this._s = s > 1.0 ? 1.0 : s;
+        this._v = v > 1.0 ? 1.0 : v;
     }
-  
-    return { r: r, g: g, b: b };
-}
 
-function rgb2str(rgb){
-    return "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")";
+    get h(){
+        return this._h;
+    }
+
+    get s(){
+        return this._s;
+    }
+
+    get v(){
+        return this._v;
+    }
+
+    set h(value){
+        this._h = value > 1.0 ? 1.0 : value;
+    }
+
+    set s(value){
+        this._s = value > 1.0 ? 1.0 : value;
+    }
+
+    set v(value){
+        this._v = value > 1.0 ? 1.0 : value;
+    }
+
+    toRGB(){
+        let r, g, b;
+        let i = Math.floor(this._h * 6.0);
+        let f = this._h * 6.0 - i;
+        let p = this._v * (1.0 - this._s);
+        let q = this._v * (1.0 - f * this._s);
+        let t = this._v * (1.0 - (1.0 - f) * this._s);
+    
+        switch (i % 6) {
+            case 0: r = this._v; g = t; b = p; break;
+            case 1: r = q; g = this._v; b = p; break;
+            case 2: r = p; g = this._v; b = t; break;
+            case 3: r = p; g = q; b = this._v; break;
+            case 4: r = t; g = p; b = this._v; break;
+            case 5: r = this._v; g = p; b = q; break;
+        }
+    
+        return new RGB(r * 256, g * 256, b * 256);
+    }
+
+    toString(){
+        return "hsv(" + this._h.toString() + ", " + this._s.toString() + ", " + this._v.toString() + ")";
+    }
 }
