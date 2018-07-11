@@ -1,6 +1,112 @@
 //Элемент канва
 let canvas = document.getElementById("canvas");
-//Контекст рисования
+
+class GameEngine{
+	constructor(canvas){
+		this.canvas = canvas;
+		this.context2D = canvas.getContext("2d");
+		this.gameObjects = [];
+		this._setupCanvas();
+	}
+	
+	_setupCanvas(){
+		this.context2D.mouse = {
+			x: 0,
+			y: 0,
+			movX: 0,
+			movY: 0,
+			click: false,
+			down: false,
+			up: false,
+			move: false,
+			button: 0
+		};
+		
+		this.canvas.addEventListener("mousemove", this._onMouseMove.bind(this));
+		this.canvas.addEventListener("mousedown", this._onMouseDown.bind(this));
+		this.canvas.addEventListener("mouseup", this._onMouseUp.bind(this));
+	}
+	
+	_onMouseMove(event){
+		this.context2D.mouse.x = event.offsetX;
+		this.context2D.mouse.y = event.offsetY;
+		this.context2D.mouse.movX = event.movementX;
+		this.context2D.mouse.movY = event.movementY;
+		this.context2D.mouse.move = true;
+	}
+	
+	_onMouseDown(event){
+		this.context2D.mouse.button = event.which;
+		this.context2D.mouse.down = true;
+		this.context2D.mouse.up = false;
+	}
+	
+	_onMouseUp(event){
+		this.context2D.mouse.button = event.which;
+		this.context2D.mouse.down = false;
+		this.context2D.mouse.up = true;
+		this.context2D.mouse.click = true;
+	}
+	
+	_mouseEventReset(){
+		this.context2D.mouse.move = false;
+		this.context2D.mouse.click = false;
+		this.context2D.mouse.button = 0;
+	}
+	
+	_draw(){
+		let engine = this;
+		engine.context2D.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		
+		engine.gameObjects.forEach(function(object) {
+			object.draw(engine.context2D);
+		});
+	}
+	
+	_update(){
+		let engine = this;
+		
+		engine.gameObjects.forEach(function(object){
+			object.update(engine.context2D);
+		});
+	}
+	
+	run(){
+		this._update();
+		this._draw();
+		this._mouseEventReset();
+		requestAnimationFrame(this.run.bind(this));
+	}
+}
+
+let engine = new GameEngine(canvas);
+let button = new Button("Button", new Vec2(160, 40), new Vec2(45, 50));
+let label = new Label("Label", new Vec2(160, 40), new Vec2(45, 100));
+let slider = new Slider(new Vec2(300, 1), new Vec2(10, 22), new Vec2(45, 150));
+slider.text = "%";
+let checkBox = new CheckBox("Music", new Vec2(12, 12), new Vec2(45, 200));
+
+button.eventClick = function(){
+    label.text = "Label";
+};
+
+slider.eventScroll = function(value){
+};
+
+checkBox.eventChecked = function(value){
+	label.text = value === true ? "checked" : "unchecked";
+};
+ 
+engine.gameObjects.push(button);
+engine.gameObjects.push(label);
+engine.gameObjects.push(slider);
+engine.gameObjects.push(checkBox);
+engine.run();
+
+
+
+
+/*//Контекст рисования
 let ctx = canvas.getContext('2d');
 //Высота и ширина канвы
 let heightWindow = canvas.height;
@@ -63,4 +169,4 @@ window.onload = function() {
 	initGame();
 	//Запуск игры
 	gameStart(gameLoop);
-};
+};*/
