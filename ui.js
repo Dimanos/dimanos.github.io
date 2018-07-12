@@ -4,37 +4,34 @@ class UIObject extends Object{
 		this._hovered = false;
 		this._clicked = false;
 		this._pressed = false;
+		this._font = new Font();
 	}
 	
 	_updateStats(canvas){
         if (this.contains(canvas.mouse)){
             this._hovered = true;
-			
-            if (canvas.mouse.click){
-                this._clicked = true;
-            }else{
-				this._clicked = false;
-			}
-			
-			if (canvas.mouse.down){
-				this._pressed = true;
-			}else{
-				this._pressed = false;
-			}
-			
+            this._clicked = canvas.mouse.click;
+			this._pressed = canvas.mouse.down;
         }else{
             this._hovered = false;
 			this._pressed = false;
 			this._clicked = false;
         }             
     }
+	
+	get font(){
+		return this._font;
+	}
+	
+	set font(value){
+		this._font = value;
+	}
 }
 
 class Button extends UIObject{
 	constructor(text = "button", size = new Vec2(0, 0), position = new Vec2(0, 0)){
 		super(position, size);
 		this._handler = function(){};
-		this._font = new Font();
 		this._text = text;
 		this._fillColor = "#00CE8C";
 		this._hoverColor = "#00FFA9";
@@ -43,14 +40,6 @@ class Button extends UIObject{
 	
 	set eventClick(listener){
 		this._handler = listener;
-	}
-	
-	set font(value){
-		this._font = value;
-	}
-	
-	get font(){
-		return this._font;
 	}
 	
 	set fillColor(value){
@@ -78,10 +67,9 @@ class Button extends UIObject{
 	}
 	
 	update(canvas){
-		let wasNotClicked = !this.clicked;
 		this._updateStats(canvas);
  
-		if (this._clicked && wasNotClicked){
+		if (this._clicked){
 			this._handler();
 		}
 	}
@@ -100,7 +88,7 @@ class Button extends UIObject{
 		canvas.fillRect(this._position.x, this._position.y, this._size.x, this._size.y);
 		
 		this._font.setFont(canvas);
-		canvas.fillText(this._text, this._position.x + this._size.x / 2.0, this._position.y + this._size.y / 2.0);
+		canvas.fillText(this._text, this._position.x + this._size.x / 2, this._position.y + this._size.y / 2);
 	}
 }
 
@@ -108,7 +96,6 @@ class Label extends UIObject{
 	constructor(text = "label", size = new Vec2(0, 0), position = new Vec2(0, 0)){
 		super(position, size);
 		this._text = text;
-		this._font = new Font();
 		this._font.horizontalAligment = "left";
 		this._font.verticalAligment = "top";
 	}
@@ -119,14 +106,6 @@ class Label extends UIObject{
 	
 	set text(value){
 		this._text = value;
-	}
-	
-	get font(){
-		return this._font;
-	}
-	
-	set font(value){
-		this._font = value;
 	}
 	
 	update(canvas){
@@ -143,13 +122,12 @@ class Slider extends UIObject{
 	constructor(trackSize = new Vec2(0, 0), sliderSize = new Vec2(0, 0), position = new Vec2(0, 0), min = 0, max = 100, value = 0){
 		let maxW = Math.max(trackSize.x, sliderSize.x);
 		let maxH = Math.max(trackSize.y, sliderSize.y);
-		let posY = position.y + (maxH - trackSize.y) / 2.0;
+		let posY = position.y + (maxH - trackSize.y) / 2;
 		super(position, new Vec2(maxW + sliderSize.x, maxH));
-		this._trackPosition = new Vec2(position.x + sliderSize.x / 2.0, posY);
+		this._trackPosition = new Vec2(position.x + sliderSize.x / 2, posY);
 		this._sliderPosition = new Vec2(position.x, position.y);
 		this._trackSize = trackSize;
 		this._sliderSize = sliderSize;
-		this._font = new Font();
 		this._text = "";
 		this._min = min;
 		this._max = max;
@@ -162,14 +140,6 @@ class Slider extends UIObject{
 	
 	set eventScroll(listener){
 		this._handler = listener;
-	}
-	
-	get font(){
-		return this._font;
-	}
-	
-	set font(value){
-		this._font = value;
 	}
 	
 	set value(val){
@@ -224,8 +194,8 @@ class Slider extends UIObject{
 class CheckBox extends UIObject{
 	constructor(text = "checkBox", size = new Vec2(0, 0), position = new Vec2(0, 0)){
 		super(position, size);
-		this._font = new Font();
 		this._text = text;
+		this._font.horizontalAligment = "left";
 		this._handler = function(){};
 		this._hoverColor = "#DDDDDD";
 		this._fillColor = "#FFFFFF";
@@ -255,14 +225,6 @@ class CheckBox extends UIObject{
 		this._text = value;
 	}
 	
-	get font(){
-		return this._font;
-	}
-	
-	set font(value){
-		this._font = value;
-	}
-	
 	update(canvas){
 		this._updateStats(canvas);
 		
@@ -273,14 +235,8 @@ class CheckBox extends UIObject{
 	}
 	
 	draw(canvas){
-		canvas.fillStyle = this._fillColor;
-		
-		if (this._hovered){
-			canvas.fillStyle = this._hoverColor;
-		}
-		
+		canvas.fillStyle = this._hovered ? this._hoverColor : this._fillColor;	
 		canvas.fillRect(this._position.x, this._position.y, this._size.x, this._size.y);
-		
 		canvas.strokeStyle = this._borderColor;
 		canvas.lineWidth = 1;
 		canvas.strokeRect(this._position.x, this._position.y, this._size.x, this._size.y);
@@ -290,8 +246,53 @@ class CheckBox extends UIObject{
 			canvas.fillRect(this._position.x + this._space, this._position.y + this._space, this._size.x - this._space * 2, this._size.y - this._space * 2);
 		}
 		
-		this._font.horizontalAligment = "left";
 		this._font.setFont(canvas);
 		canvas.fillText(this._text, this._position.x + this._size.x * 1.5, this._position.y + this._size.y / 2);
+	}
+}
+
+class ProgressBar extends UIObject{
+	constructor(size = new Vec2(0, 0), position = new Vec2(0, 0), min = 0, max = 100){
+		super(position, size);
+		this._fillColor = "#FFFFFF";
+		this._borderColor = "#9970A2";
+		this._progressColor = "#00CE8C";
+		this._borderWeight = 1;
+		this._min = min;
+		this._max = max;
+		this._value = min;
+	}
+	
+	get value(){
+		return this._value;
+	}
+	
+	set value(val){
+		this._value = val;
+	}
+	
+	get minValue(){
+		return this._min;
+	}
+	
+	get maxValue(){
+		return this._max;
+	}
+	
+	update(canvas){
+		this._updateStats(canvas);
+	}
+	
+	draw(canvas){
+		canvas.fillStyle = this._fillColor;
+		canvas.strokeStyle = this._borderColor;
+		canvas.lineWidth = this._borderWeight;
+		canvas.fillRect(this._position.x, this._position.y, this._size.x, this._size.y);
+		canvas.strokeRect(this._position.x, this._position.y, this._size.x, this._size.y);
+		canvas.fillStyle = this._progressColor;
+		let delta = this._value / (this._max - this._min);
+		canvas.fillRect(this._position.x + this._borderWeight, this._position.y + this._borderWeight, this._size.x * delta - this._borderWeight * 2, this._size.y - this._borderWeight * 2);
+		this._font.setFont(canvas);
+		canvas.fillText(Math.round(delta * 100).toString() + "%", this._position.x + this._size.x / 2, this._position.y + this._size.y / 2);
 	}
 }

@@ -1,4 +1,3 @@
-//Элемент канва
 let canvas = document.getElementById("canvas");
 
 class GameEngine{
@@ -7,6 +6,9 @@ class GameEngine{
 		this.context2D = canvas.getContext("2d");
 		this.gameObjects = [];
 		this._setupCanvas();
+		this._lastPerformance = performance.now();
+		this._fpsLabel = new Label("FPS: ", new Vec2(160, 40), new Vec2(5, 5));
+		this.gameObjects.push(this._fpsLabel);
 	}
 	
 	_setupCanvas(){
@@ -53,6 +55,13 @@ class GameEngine{
 		this.context2D.mouse.click = false;
 		this.context2D.mouse.button = 0;
 	}
+
+	_fpsCounter(){
+		let delta = (performance.now() - this._lastPerformance) / 1000;
+		this._lastPerformance = performance.now();
+		let fps = 1.0 / delta;
+		this._fpsLabel.text = "FPS: " + fps.toFixed(2).toString();
+	}
 	
 	_draw(){
 		let engine = this;
@@ -72,6 +81,7 @@ class GameEngine{
 	}
 	
 	run(){
+		this._fpsCounter();
 		this._update();
 		this._draw();
 		this._mouseEventReset();
@@ -85,6 +95,7 @@ let label = new Label("Label", new Vec2(160, 40), new Vec2(45, 100));
 let slider = new Slider(new Vec2(300, 1), new Vec2(10, 22), new Vec2(45, 150));
 slider.text = "%";
 let checkBox = new CheckBox("Music", new Vec2(12, 12), new Vec2(45, 200));
+let pBar = new ProgressBar(new Vec2(300, 25), new Vec2(45, 250));
 
 button.eventClick = function(){
     label.text = "Label";
@@ -96,15 +107,26 @@ slider.eventScroll = function(value){
 checkBox.eventChecked = function(value){
 	label.text = value === true ? "checked" : "unchecked";
 };
+
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+  
+let timerId = setInterval(async function(){ 
+	await sleep(Math.random() * 300);
+	if (pBar.value < pBar.maxValue){
+		pBar.value += 1;
+	}else{
+		clearInterval(timerId);
+	}
+}, 100);
  
 engine.gameObjects.push(button);
 engine.gameObjects.push(label);
 engine.gameObjects.push(slider);
 engine.gameObjects.push(checkBox);
+engine.gameObjects.push(pBar);
 engine.run();
-
-
-
 
 /*//Контекст рисования
 let ctx = canvas.getContext('2d');
