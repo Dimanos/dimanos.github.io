@@ -24,9 +24,36 @@ class GameEngine{
 			button: 0
 		};
 		
-		this.canvas.addEventListener("mousemove", this._onMouseMove.bind(this));
-		this.canvas.addEventListener("mousedown", this._onMouseDown.bind(this));
-		this.canvas.addEventListener("mouseup", this._onMouseUp.bind(this));
+		this.canvas.addEventListener("mousemove",   this._onMouseMove.bind(this),   false);
+		this.canvas.addEventListener("mousedown",   this._onMouseDown.bind(this),   false);
+		this.canvas.addEventListener("mouseup",     this._onMouseUp.bind(this),     false);
+		this.canvas.addEventListener("touchstart",  this._onTouchStart.bind(this),  false);
+		this.canvas.addEventListener("touchend",    this._onTouchEnd.bind(this),    false);
+		this.canvas.addEventListener("touchmove",   this._onTouchMove.bind(this),   false);
+	}
+
+	_onTouchStart(event){
+		event.preventDefault();
+		this.context2D.mouse.button = 1;
+		this.context2D.mouse.down = true;
+		this.context2D.mouse.up = false;
+	}
+
+	_onTouchEnd(event){
+		event.preventDefault();
+		this.context2D.mouse.button = 1;
+		this.context2D.mouse.down = false;
+		this.context2D.mouse.up = true;
+		this.context2D.mouse.click = true;
+	}
+
+	_onTouchMove(event){
+		event.preventDefault();
+		this.context2D.mouse.x = event.offsetX;
+		this.context2D.mouse.y = event.offsetY;
+		this.context2D.mouse.movX = event.movementX;
+		this.context2D.mouse.movY = event.movementY;
+		this.context2D.mouse.move = true;
 	}
 	
 	_onMouseMove(event){

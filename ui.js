@@ -14,7 +14,7 @@ class UIObject extends Object{
 			this._pressed = canvas.mouse.down;
         }else{
             this._hovered = false;
-			this._pressed = false;
+			this._pressed = this._pressed === true ? !canvas.mouse.up : false;
 			this._clicked = false;
         }             
     }
@@ -134,6 +134,7 @@ class Slider extends UIObject{
 		this._value = value;
 		this._handler = function(){};
 		this._trackColor = "#9970A2";
+		this._trackFillColor = "#000000";
 		this._sliderFillColor = "#00CE8C";
 		this._sliderHoveredColor = "#00FFA9";
 	}
@@ -176,14 +177,17 @@ class Slider extends UIObject{
 	}
 	
 	draw(canvas){	
-		canvas.fillStyle = this._trackColor;
-		canvas.fillRect(this._trackPosition.x, this._trackPosition.y, this._trackSize.x, this._trackSize.y);
-		
 		let range = this._max - this._min;
 		let percent = (this._value - this._min) / range;
 		this._sliderPosition.x = this._trackPosition.x + (this._trackSize.x * percent) - this._sliderSize.x / 2;
 		
-		canvas.fillStyle = this._hovered === true ? this._sliderHoveredColor : this._sliderFillColor;
+		canvas.fillStyle = this._trackColor;
+		canvas.fillRect(this._trackPosition.x, this._trackPosition.y, this._trackSize.x, this._trackSize.y);
+		
+		canvas.fillStyle = this._trackFillColor;
+		canvas.fillRect(this._trackPosition.x, this._trackPosition.y, this._sliderPosition.x - this._trackPosition.x, this._trackSize.y);
+		
+		canvas.fillStyle = (this._hovered === true || this._pressed === true)? this._sliderHoveredColor : this._sliderFillColor;
 		canvas.fillRect(this._sliderPosition.x, this._sliderPosition.y, this._sliderSize.x, this._sliderSize.y);
 		
 		this._font.setFont(canvas);
