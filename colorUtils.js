@@ -54,8 +54,8 @@ class RGB{
         return new HSV(h, s, v);
     }
 
-    toHexString(){
-        return "#" + this._r.toString(16) + this._g.toString(16) + this._b.toString(16);
+    toString(){
+        return "rgb(" + this._r.toString() + ", " + this._g.toString() + ", " + this._b.toString() + ")";
     }
 }
 

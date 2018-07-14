@@ -5,7 +5,7 @@ class Font{
 		this._fontFamily = "Arial";
 		this._verticalAligment = "middle";
 		this._horizontalAligment = "center";
-		this._color = "#000000";
+		this._color = new RGB();
 		this._style = "normal";
 	}
 	
@@ -70,7 +70,7 @@ class Font{
 	}
 	
 	setFont(canvas){
-		canvas.fillStyle = this._color;
+		canvas.fillStyle = this._color.toString();
 		canvas.textBaseline = this._verticalAligment;
 		canvas.textAlign = this._horizontalAligment;
 		canvas.font = this.toCanvasFont();

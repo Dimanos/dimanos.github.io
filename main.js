@@ -119,16 +119,21 @@ class GameEngine{
 let engine = new GameEngine(canvas);
 let button = new Button("Button", new Vec2(160, 40), new Vec2(45, 50));
 let label = new Label("Label", new Vec2(160, 40), new Vec2(45, 100));
-let slider = new Slider(new Vec2(300, 1), new Vec2(10, 22), new Vec2(45, 150));
-slider.text = "%";
+let slider = new Slider(new Vec2(300, 1), 10, new Vec2(45, 150));
 let checkBox = new CheckBox("Music", new Vec2(12, 12), new Vec2(45, 200));
 let pBar = new ProgressBar(new Vec2(300, 25), new Vec2(45, 250));
+let block = new Block();
+block.position = new Vec2(300, 300);
+block.size = new Vec2(120, 26);
+block.color = new RGB(178, 239, 71);
+block.text = "input";
 
 button.eventClick = function(){
     label.text = "Label";
 };
 
 slider.eventScroll = function(value){
+	label.text = value + "%";
 };
 
 checkBox.eventChecked = function(value){
@@ -153,6 +158,7 @@ engine.gameObjects.push(label);
 engine.gameObjects.push(slider);
 engine.gameObjects.push(checkBox);
 engine.gameObjects.push(pBar);
+engine.gameObjects.push(block);
 engine.run();
 
 /*//Контекст рисования

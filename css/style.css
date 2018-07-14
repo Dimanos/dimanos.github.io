@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "gameFont";
+    src: url("/fonts/gameFont.ttf") format("ttf");
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+}

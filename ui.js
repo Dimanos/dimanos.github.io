@@ -1,5 +1,5 @@
 class UIObject extends Object{
-	constructor(size = new Vec2(0, 0), position = new Vec2(0, 0)){
+	constructor(size = new Vec2(), position = new Vec2()){
 		super(position, size);
 		this._hovered = false;
 		this._clicked = false;
@@ -29,7 +29,7 @@ class UIObject extends Object{
 }
 
 class Button extends UIObject{
-	constructor(text = "button", size = new Vec2(0, 0), position = new Vec2(0, 0)){
+	constructor(text = "button", size = new Vec2(), position = new Vec2()){
 		super(position, size);
 		this._handler = function(){};
 		this._text = text;
@@ -93,7 +93,7 @@ class Button extends UIObject{
 }
 
 class Label extends UIObject{
-	constructor(text = "label", size = new Vec2(0, 0), position = new Vec2(0, 0)){
+	constructor(text = "label", size = new Vec2(), position = new Vec2()){
 		super(position, size);
 		this._text = text;
 		this._font.horizontalAligment = "left";
@@ -119,16 +119,15 @@ class Label extends UIObject{
 }
 
 class Slider extends UIObject{
-	constructor(trackSize = new Vec2(0, 0), sliderSize = new Vec2(0, 0), position = new Vec2(0, 0), min = 0, max = 100, value = 0){
-		let maxW = Math.max(trackSize.x, sliderSize.x);
-		let maxH = Math.max(trackSize.y, sliderSize.y);
+	constructor(trackSize = new Vec2(200, 1), sliderSize = 10, position = new Vec2(), min = 0, max = 100, value = 0){
+		let maxW = Math.max(trackSize.x, sliderSize);
+		let maxH = Math.max(trackSize.y, sliderSize);
 		let posY = position.y + (maxH - trackSize.y) / 2;
-		super(position, new Vec2(maxW + sliderSize.x, maxH));
-		this._trackPosition = new Vec2(position.x + sliderSize.x / 2, posY);
-		this._sliderPosition = new Vec2(position.x, position.y);
+		super(position, new Vec2(maxW + sliderSize, maxH));
+		this._trackPosition = new Vec2(position.x + sliderSize / 2, posY);
+		this._sliderPosition = new Vec2(position.x, position.y + sliderSize / 2);
 		this._trackSize = trackSize;
 		this._sliderSize = sliderSize;
-		this._text = "";
 		this._min = min;
 		this._max = max;
 		this._value = value;
@@ -151,14 +150,6 @@ class Slider extends UIObject{
 		return this._value;
 	}
 	
-	get text(){
-		return this._text;
-	}
-	
-	set text(value){
-		this._text = value;
-	}
-	
 	update(canvas){
 		this._updateStats(canvas);
 		
@@ -178,25 +169,22 @@ class Slider extends UIObject{
 	
 	draw(canvas){	
 		let range = this._max - this._min;
-		let percent = (this._value - this._min) / range;
-		this._sliderPosition.x = this._trackPosition.x + (this._trackSize.x * percent) - this._sliderSize.x / 2;
-		
+		let percent = this._value / range;
+		this._sliderPosition.x = this._position.x + (this._trackSize.x * percent) + this._sliderSize / 2;
+	
 		canvas.fillStyle = this._trackColor;
 		canvas.fillRect(this._trackPosition.x, this._trackPosition.y, this._trackSize.x, this._trackSize.y);
-		
+
 		canvas.fillStyle = this._trackFillColor;
 		canvas.fillRect(this._trackPosition.x, this._trackPosition.y, this._sliderPosition.x - this._trackPosition.x, this._trackSize.y);
-		
+
 		canvas.fillStyle = (this._hovered === true || this._pressed === true)? this._sliderHoveredColor : this._sliderFillColor;
-		canvas.fillRect(this._sliderPosition.x, this._sliderPosition.y, this._sliderSize.x, this._sliderSize.y);
-		
-		this._font.setFont(canvas);
-		canvas.fillText(this._value.toString() + this._text, this._position.x + this._size.x + 30, this._trackPosition.y);
+		canvas.fillCircle(this._sliderPosition.x, this._sliderPosition.y, this._sliderSize);
 	}
 }
 
 class CheckBox extends UIObject{
-	constructor(text = "checkBox", size = new Vec2(0, 0), position = new Vec2(0, 0)){
+	constructor(text = "checkBox", size = new Vec2(), position = new Vec2()){
 		super(position, size);
 		this._text = text;
 		this._font.horizontalAligment = "left";
@@ -256,7 +244,7 @@ class CheckBox extends UIObject{
 }
 
 class ProgressBar extends UIObject{
-	constructor(size = new Vec2(0, 0), position = new Vec2(0, 0), min = 0, max = 100){
+	constructor(size = new Vec2(), position = new Vec2(), min = 0, max = 100){
 		super(position, size);
 		this._fillColor = "#FFFFFF";
 		this._borderColor = "#9970A2";
