@@ -1,5 +1,5 @@
 class Object{
-	constructor(size = new Vec2(), position = new Vec2()){
+	constructor(position = new Vec2(), size = new Vec2()){
 		this._size = size;
 		this._position = position;
 	}

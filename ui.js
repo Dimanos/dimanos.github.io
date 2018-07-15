@@ -1,5 +1,5 @@
 class UIObject extends Object{
-	constructor(size = new Vec2(), position = new Vec2()){
+	constructor(position = new Vec2(), size = new Vec2()){
 		super(position, size);
 		this._hovered = false;
 		this._clicked = false;
@@ -8,15 +8,31 @@ class UIObject extends Object{
 	}
 	
 	_updateStats(canvas){
-        if (this.contains(canvas.mouse)){
-            this._hovered = canvas.mouse.type === "mouse" ? true : false;
-            this._clicked = canvas.mouse.click;
-			this._pressed = canvas.mouse.down;
-        }else{
-            this._hovered = false;
-			this._pressed = this._pressed === true ? !canvas.mouse.up : false;
-			this._clicked = false;
-        }             
+		if (canvas.mouse.type === "mouse"){
+			if (this.contains(canvas.mouse)){
+				this._hovered = true;
+				this._clicked = canvas.mouse.click;
+				this._pressed = canvas.mouse.down;
+			}else{
+				this._hovered = false;
+				this._pressed = this._pressed === true ? !canvas.mouse.up : false;
+				this._clicked = false;
+			}
+		} else if (canvas.mouse.type === "touch"){
+			let newPos = new Vec2(this._position.x - 10, this._position.y - 10);
+			let newSize = new Vec2(this._size.x + 10, this._size.y + 10);
+			let tempObj = new Object(newPos, newSize);
+
+			if (tempObj.contains(canvas.mouse)){
+				this._hovered = false;
+				this._clicked = canvas.mouse.click;
+				this._pressed = canvas.mouse.down;
+			}else{
+				this._hovered = false;
+				this._pressed = this._pressed === true ? !canvas.mouse.up : false;
+				this._clicked = false;
+			}
+		}
     }
 	
 	get font(){
@@ -29,7 +45,7 @@ class UIObject extends Object{
 }
 
 class Button extends UIObject{
-	constructor(text = "button", size = new Vec2(), position = new Vec2()){
+	constructor(text = "button", position = new Vec2(), size = new Vec2()){
 		super(position, size);
 		this._handler = function(){};
 		this._text = text;
@@ -93,7 +109,7 @@ class Button extends UIObject{
 }
 
 class Label extends UIObject{
-	constructor(text = "label", size = new Vec2(), position = new Vec2()){
+	constructor(text = "label", position = new Vec2(), size = new Vec2()){
 		super(position, size);
 		this._text = text;
 		this._font.horizontalAligment = "left";
@@ -184,7 +200,7 @@ class Slider extends UIObject{
 }
 
 class CheckBox extends UIObject{
-	constructor(text = "checkBox", size = new Vec2(), position = new Vec2()){
+	constructor(text = "checkBox", position = new Vec2(), size = new Vec2()){
 		super(position, size);
 		this._text = text;
 		this._font.horizontalAligment = "left";
@@ -244,7 +260,7 @@ class CheckBox extends UIObject{
 }
 
 class ProgressBar extends UIObject{
-	constructor(size = new Vec2(), position = new Vec2(), min = 0, max = 100){
+	constructor(position = new Vec2(), size = new Vec2(), min = 0, max = 100){
 		super(position, size);
 		this._fillColor = "#FFFFFF";
 		this._borderColor = "#9970A2";

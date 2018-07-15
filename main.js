@@ -7,7 +7,7 @@ class GameEngine{
 		this.gameObjects = [];
 		this._setupCanvas();
 		this._lastPerformance = performance.now();
-		this._fpsLabel = new Label("FPS: ", new Vec2(160, 40), new Vec2(5, 5));
+		this._fpsLabel = new Label("FPS: ", new Vec2(2, 2), new Vec2(160, 40));
 		this.gameObjects.push(this._fpsLabel);
 	}
 	
@@ -131,11 +131,11 @@ class GameEngine{
 }
 
 let engine = new GameEngine(canvas);
-let button = new Button("Button", new Vec2(160, 40), new Vec2(45, 50));
-let label = new Label("Label", new Vec2(160, 40), new Vec2(45, 100));
+let button = new Button("Button", new Vec2(45, 50), new Vec2(160, 40));
+let label = new Label("Label", new Vec2(45, 100), new Vec2(160, 40));
 let slider = new Slider(new Vec2(300, 1), 10, new Vec2(45, 150));
-let checkBox = new CheckBox("Music", new Vec2(12, 12), new Vec2(45, 200));
-let pBar = new ProgressBar(new Vec2(300, 25), new Vec2(45, 250));
+let checkBox = new CheckBox("Music", new Vec2(45, 200), new Vec2(12, 12));
+let pBar = new ProgressBar(new Vec2(45, 250), new Vec2(300, 25));
 let block = new Block();
 block.position = new Vec2(300, 300);
 block.size = new Vec2(120, 26);
