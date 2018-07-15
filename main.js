@@ -33,27 +33,34 @@ class GameEngine{
 	}
 
 	_onTouchStart(event){
-		event.preventDefault();
+		let touchobj = event.changedTouches[0];
+		this.context2D.mouse.x = touchobj.clientX;
+		this.context2D.mouse.y = touchobj.clientY;
 		this.context2D.mouse.button = 1;
 		this.context2D.mouse.down = true;
 		this.context2D.mouse.up = false;
+		event.preventDefault();
 	}
 
 	_onTouchEnd(event){
-		event.preventDefault();
+		let touchobj = event.changedTouches[0];
+		this.context2D.mouse.x = touchobj.clientX;
+		this.context2D.mouse.y = touchobj.clientY;
 		this.context2D.mouse.button = 1;
 		this.context2D.mouse.down = false;
 		this.context2D.mouse.up = true;
 		this.context2D.mouse.click = true;
+		event.preventDefault();
 	}
 
 	_onTouchMove(event){
-		event.preventDefault();
-		this.context2D.mouse.x = event.offsetX;
-		this.context2D.mouse.y = event.offsetY;
-		this.context2D.mouse.movX = event.movementX;
-		this.context2D.mouse.movY = event.movementY;
+		let touchobj = event.changedTouches[0];
+		this.context2D.mouse.movX = touchobj.clientX - this.context2D.mouse.x;
+		this.context2D.mouse.movY = touchobj.clientY - this.context2D.mouse.y;
+		this.context2D.mouse.x = touchobj.clientX;
+		this.context2D.mouse.y = touchobj.clientY;
 		this.context2D.mouse.move = true;
+		event.preventDefault();
 	}
 	
 	_onMouseMove(event){
