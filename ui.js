@@ -9,7 +9,7 @@ class UIObject extends Object{
 	
 	_updateStats(canvas){
         if (this.contains(canvas.mouse)){
-            this._hovered = true;
+            this._hovered = canvas.mouse.type === "mouse" ? true : false;
             this._clicked = canvas.mouse.click;
 			this._pressed = canvas.mouse.down;
         }else{
