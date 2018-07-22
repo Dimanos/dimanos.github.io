@@ -8,30 +8,14 @@ class UIObject extends Object{
 	}
 	
 	_updateStats(canvas){
-		if (canvas.mouse.type === "mouse"){
-			if (this.contains(canvas.mouse)){
-				this._hovered = true;
-				this._clicked = canvas.mouse.click;
-				this._pressed = canvas.mouse.down;
-			}else{
-				this._hovered = false;
-				this._pressed = this._pressed === true ? !canvas.mouse.up : false;
-				this._clicked = false;
-			}
-		} else if (canvas.mouse.type === "touch"){
-			let newPos = new Vec2(this._position.x - 10, this._position.y - 10);
-			let newSize = new Vec2(this._size.x + 10, this._size.y + 10);
-			let tempObj = new Object(newPos, newSize);
-
-			if (tempObj.contains(canvas.mouse)){
-				this._hovered = false;
-				this._clicked = canvas.mouse.click;
-				this._pressed = canvas.mouse.down;
-			}else{
-				this._hovered = false;
-				this._pressed = this._pressed === true ? !canvas.mouse.up : false;
-				this._clicked = false;
-			}
+		if (this.contains(canvas.mouse)){
+			this._hovered = canvas.mouse.type === "mouse" ? true : false;
+			this._clicked = canvas.mouse.click;
+			this._pressed = canvas.mouse.down;
+		}else{
+			this._hovered = false;
+			this._pressed = this._pressed === true ? !canvas.mouse.up : false;
+			this._clicked = false;
 		}
     }
 	

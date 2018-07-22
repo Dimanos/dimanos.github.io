@@ -24,6 +24,8 @@ class GameEngine{
 			button: 0,
 			type: "mouse"
 		};
+
+		this.context2D.size = new Vec2(this.canvas.width, this.canvas.height);
 		
 		this.canvas.addEventListener("mousemove",   this._onMouseMove.bind(this),   false);
 		this.canvas.addEventListener("mousedown",   this._onMouseDown.bind(this),   false);
@@ -35,8 +37,8 @@ class GameEngine{
 
 	_onTouchStart(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.x = touchObj.clientX;
-		this.context2D.mouse.y = touchObj.clientY;
+		this.context2D.mouse.x = touchObj.clientX + this.canvas.left;
+		this.context2D.mouse.y = touchObj.clientY + this.canvas.top;
 		this.context2D.mouse.button = 1;
 		this.context2D.mouse.down = true;
 		this.context2D.mouse.up = false;
@@ -46,8 +48,8 @@ class GameEngine{
 
 	_onTouchEnd(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.x = touchObj.clientX;
-		this.context2D.mouse.y = touchObj.clientY;
+		this.context2D.mouse.x = touchObj.clientX + this.canvas.left;
+		this.context2D.mouse.y = touchObj.clientY + this.canvas.top;
 		this.context2D.mouse.button = 1;
 		this.context2D.mouse.down = false;
 		this.context2D.mouse.up = true;
@@ -58,10 +60,10 @@ class GameEngine{
 
 	_onTouchMove(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.movX = touchObj.clientX - this.context2D.mouse.x;
-		this.context2D.mouse.movY = touchObj.clientY - this.context2D.mouse.y;
-		this.context2D.mouse.x = touchObj.clientX;
-		this.context2D.mouse.y = touchObj.clientY;
+		this.context2D.mouse.movX = touchObj.clientX + this.canvas.left - this.context2D.mouse.x;
+		this.context2D.mouse.movY = touchObj.clientY + this.canvas.top - this.context2D.mouse.y;
+		this.context2D.mouse.x = touchObj.clientX + this.canvas.left;
+		this.context2D.mouse.y = touchObj.clientY + this.canvas.top;
 		this.context2D.mouse.move = true;
 		this.context2D.mouse.type = "touch";
 		event.preventDefault();
@@ -132,6 +134,7 @@ class GameEngine{
 
 let engine = new GameEngine(canvas);
 let button = new Button("Button", new Vec2(45, 50), new Vec2(160, 40));
+let button2 = new Button("FullScreen", new Vec2(210, 50), new Vec2(160, 40));
 let label = new Label("Label", new Vec2(45, 100), new Vec2(160, 40));
 let slider = new Slider(new Vec2(300, 1), 10, new Vec2(45, 150));
 let checkBox = new CheckBox("Music", new Vec2(45, 200), new Vec2(12, 12));
@@ -144,6 +147,15 @@ block.text = "input";
 
 button.eventClick = function(){
     label.text = "Label";
+};
+
+button2.eventClick = function(){
+	console.log(canvas.isFullScreen); //Вот тут фигня
+    if (canvas.isFullScreen){
+		launchFullScreen(canvas);
+	}else{
+		cancelFullScreen(canvas);
+	}
 };
 
 slider.eventScroll = function(value){
@@ -168,6 +180,7 @@ let timerId = setInterval(async function(){
 }, 100);
  
 engine.gameObjects.push(button);
+engine.gameObjects.push(button2);
 engine.gameObjects.push(label);
 engine.gameObjects.push(slider);
 engine.gameObjects.push(checkBox);

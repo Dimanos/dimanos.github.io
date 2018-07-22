@@ -6,26 +6,26 @@ function launchFullScreen(element){
 		element.mozRequestFullScreen();
 	} else if (element.webkitRequestFullscreen) {
 		element.webkitRequestFullscreen();
+	} else if (element.msRequestFullscreen) {
+		element.msRequestFullscreen();
 	}
+	element.isFullScreen = true;
 }
 
 //Выход из полноэкранного режима
-function cancelFullScreen(){
+function cancelFullScreen(element){
 	if (document.cancelFullscreen) {
 		document.cancelFullscreen();
+	} else if (document.exitFullscreen) {
+		document.exitFullscreen();
 	} else if (document.mozCancelFullScreen) {
 		document.mozCancelFullScreen();
 	} else if (document.webkitCancelFullscreen) {
 		document.webkitCancelFullscreen();
+	} else if (document.msExitFullscreen) {
+		document.msExitFullscreen();
 	}
-}
-
-//Проверка на полноэкранный режим
-function isFullScreen(){
-	return document.fullscreenEnabled || 
-	document.webkitFullscreenEnabled  || 
-	document.mozFullScreenEnabled     ||
-	document.msFullscreenEnabled;
+	element.isFullScreen = false;
 }
 
 //Определяем функцию requestAnimationFrame для данного браузера, иначе возвращаем простой таймер
