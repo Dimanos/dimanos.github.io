@@ -3,6 +3,7 @@ let canvas = document.getElementById("canvas");
 class GameEngine{
 	constructor(canvas){
 		this.canvas = canvas;
+		this.canvasRect = canvas.getBoundingClientRect()
 		this.context2D = canvas.getContext("2d");
 		this.gameObjects = [];
 		this._setupCanvas();
@@ -37,8 +38,8 @@ class GameEngine{
 
 	_onTouchStart(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.x = touchObj.clientX + this.canvas.left;
-		this.context2D.mouse.y = touchObj.clientY + this.canvas.top;
+		this.context2D.mouse.x = touchObj.clientX + this.canvasRect.left;
+		this.context2D.mouse.y = touchObj.clientY + this.canvasRect.top;
 		this.context2D.mouse.button = 1;
 		this.context2D.mouse.down = true;
 		this.context2D.mouse.up = false;
@@ -48,8 +49,8 @@ class GameEngine{
 
 	_onTouchEnd(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.x = touchObj.clientX + this.canvas.left;
-		this.context2D.mouse.y = touchObj.clientY + this.canvas.top;
+		this.context2D.mouse.x = touchObj.clientX + this.canvasRect.left;
+		this.context2D.mouse.y = touchObj.clientY + this.canvasRect.top;
 		this.context2D.mouse.button = 1;
 		this.context2D.mouse.down = false;
 		this.context2D.mouse.up = true;
@@ -60,10 +61,10 @@ class GameEngine{
 
 	_onTouchMove(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.movX = touchObj.clientX + this.canvas.left - this.context2D.mouse.x;
-		this.context2D.mouse.movY = touchObj.clientY + this.canvas.top - this.context2D.mouse.y;
-		this.context2D.mouse.x = touchObj.clientX + this.canvas.left;
-		this.context2D.mouse.y = touchObj.clientY + this.canvas.top;
+		this.context2D.mouse.movX = touchObj.clientX + this.canvasRect.left - this.context2D.mouse.x;
+		this.context2D.mouse.movY = touchObj.clientY + this.canvasRect.top - this.context2D.mouse.y;
+		this.context2D.mouse.x = touchObj.clientX + this.canvasRect.left;
+		this.context2D.mouse.y = touchObj.clientY + this.canvasRect.top;
 		this.context2D.mouse.move = true;
 		this.context2D.mouse.type = "touch";
 		event.preventDefault();
