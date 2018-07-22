@@ -36,10 +36,17 @@ class GameEngine{
 		this.canvas.addEventListener("touchmove",   this._onTouchMove.bind(this),   false);
 	}
 
+	_getMousePos(event) {
+        return {
+			x: event.clientX - this.canvasRect.left,
+			y: event.clientY - this.canvasRect.top
+        };
+    }
+
 	_onTouchStart(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.x = touchObj.clientX + this.canvasRect.left;
-		this.context2D.mouse.y = touchObj.clientY + this.canvasRect.top;
+		this.context2D.mouse.x = this._getMousePos(touchObj).x;
+		this.context2D.mouse.y = this._getMousePos(touchObj).y;
 		this.context2D.mouse.button = 1;
 		this.context2D.mouse.down = true;
 		this.context2D.mouse.up = false;
@@ -49,8 +56,8 @@ class GameEngine{
 
 	_onTouchEnd(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.x = touchObj.clientX + this.canvasRect.left;
-		this.context2D.mouse.y = touchObj.clientY + this.canvasRect.top;
+		this.context2D.mouse.x = this._getMousePos(touchObj).x;
+		this.context2D.mouse.y = this._getMousePos(touchObj).y;
 		this.context2D.mouse.button = 1;
 		this.context2D.mouse.down = false;
 		this.context2D.mouse.up = true;
@@ -61,18 +68,18 @@ class GameEngine{
 
 	_onTouchMove(event){
 		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.movX = touchObj.clientX + this.canvasRect.left - this.context2D.mouse.x;
-		this.context2D.mouse.movY = touchObj.clientY + this.canvasRect.top - this.context2D.mouse.y;
-		this.context2D.mouse.x = touchObj.clientX + this.canvasRect.left;
-		this.context2D.mouse.y = touchObj.clientY + this.canvasRect.top;
+		this.context2D.mouse.movX = this._getMousePos(touchObj).x - this.context2D.mouse.x;
+		this.context2D.mouse.movY = this._getMousePos(touchObj).y - this.context2D.mouse.y;
+		this.context2D.mouse.x = this._getMousePos(touchObj).x;
+		this.context2D.mouse.y = this._getMousePos(touchObj).y;
 		this.context2D.mouse.move = true;
 		this.context2D.mouse.type = "touch";
 		event.preventDefault();
 	}
 	
 	_onMouseMove(event){
-		this.context2D.mouse.x = event.offsetX;
-		this.context2D.mouse.y = event.offsetY;
+		this.context2D.mouse.x = this._getMousePos(event).x;
+		this.context2D.mouse.y = this._getMousePos(event).y;
 		this.context2D.mouse.movX = event.movementX;
 		this.context2D.mouse.movY = event.movementY;
 		this.context2D.mouse.move = true;
