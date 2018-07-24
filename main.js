@@ -18,9 +18,9 @@ button.eventClick = function(){
 
 button2.eventClick = function(){
     if (engine.isFullScreen){
-		engine.startFullScreen();
-	}else{
 		engine.stopFullScreen();
+	}else{
+		engine.startFullScreen();
 	}
 };
 

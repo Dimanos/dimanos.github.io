@@ -114,7 +114,7 @@ class GameEngine{
 	}
 
 	startFullScreen(){
-		this._isFullScreen = true;
+        this._isFullScreen = true;
 		launchFullScreen(this._canvas);
 	}
 
