@@ -7,6 +7,7 @@ class GameEngine{
 		this.context2D = canvas.getContext("2d");
 		this.gameObjects = [];
 		this._setupCanvas();
+		this._isFullScreen = false;
 		this._lastPerformance = performance.now();
 		this._fpsLabel = new Label("FPS: ", new Vec2(2, 2), new Vec2(160, 40));
 		this.gameObjects.push(this._fpsLabel);
@@ -26,7 +27,7 @@ class GameEngine{
 			type: "mouse"
 		};
 
-		this.context2D.size = new Vec2(this.canvas.width, this.canvas.height);
+		this.context2D.size = new Vec2(this.canvasRect.width, this.canvasRect.height);
 		
 		this.canvas.addEventListener("mousemove",   this._onMouseMove.bind(this),   false);
 		this.canvas.addEventListener("mousedown",   this._onMouseDown.bind(this),   false);
@@ -113,6 +114,20 @@ class GameEngine{
 		let fps = 1.0 / delta;
 		this._fpsLabel.text = "FPS: " + fps.toFixed(2).toString();
 	}
+
+	startFullScreen(){
+		this._isFullScreen = true;
+		launchFullScreen(this.canvas);
+	}
+
+	stopFullScreen(){
+		this._isFullScreen = false;
+		launchFullScreen(this.canvas);
+	}
+
+	get isFullScreen(){
+		return this._isFullScreen;
+	}
 	
 	_draw(){
 		let engine = this;
@@ -144,7 +159,7 @@ let engine = new GameEngine(canvas);
 let button = new Button("Button", new Vec2(45, 50), new Vec2(160, 40));
 let button2 = new Button("FullScreen", new Vec2(210, 50), new Vec2(160, 40));
 let label = new Label("Label", new Vec2(45, 100), new Vec2(160, 40));
-let slider = new Slider(new Vec2(300, 1), 10, new Vec2(45, 150));
+let slider = new Slider(new Vec2(45, 150), new Vec2(300, 10));
 let checkBox = new CheckBox("Music", new Vec2(45, 200), new Vec2(12, 12));
 let pBar = new ProgressBar(new Vec2(45, 250), new Vec2(300, 25));
 let block = new Block();
@@ -158,11 +173,10 @@ button.eventClick = function(){
 };
 
 button2.eventClick = function(){
-	console.log(canvas.isFullScreen); //Вот тут фигня
-    if (canvas.isFullScreen){
-		launchFullScreen(canvas);
+    if (engine.isFullScreen){
+		engine.startFullScreen();
 	}else{
-		cancelFullScreen(canvas);
+		engine.stopFullScreen();
 	}
 };
 

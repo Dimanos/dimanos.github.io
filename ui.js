@@ -119,15 +119,12 @@ class Label extends UIObject{
 }
 
 class Slider extends UIObject{
-	constructor(trackSize = new Vec2(200, 1), sliderSize = 10, position = new Vec2(), min = 0, max = 100, value = 0){
-		let maxW = Math.max(trackSize.x, sliderSize);
-		let maxH = Math.max(trackSize.y, sliderSize);
-		let posY = position.y + (maxH - trackSize.y) / 2;
-		super(position, new Vec2(maxW + sliderSize, maxH));
-		this._trackPosition = new Vec2(position.x + sliderSize / 2, posY);
-		this._sliderPosition = new Vec2(position.x, position.y + sliderSize / 2);
-		this._trackSize = trackSize;
-		this._sliderSize = sliderSize;
+	constructor(position = new Vec2(), size = new Vec2(), min = 0, max = 100, value = 0){
+		super(position, size);
+		this._trackSize = new Vec2(size.x - size.y, 1);
+		this._trackPos  = new Vec2(position.x + size.y / 2, position.y + size.y / 2 - this._trackSize.y);
+		this._sliderSize = size.y;
+		this._sliderPos = new Vec2(position.x + size.y / 2, this._trackPos.y);
 		this._min = min;
 		this._max = max;
 		this._value = value;
@@ -156,11 +153,11 @@ class Slider extends UIObject{
 		if(this._pressed){
 			let pos = canvas.mouse.x;
 			
-			pos = Math.max(pos, this._trackPosition.x);
-			pos = Math.min(pos, this._trackPosition.x + this._trackSize.x);
+			pos = Math.max(pos, this._trackPos.x);
+			pos = Math.min(pos, this._trackPos.x + this._trackSize.x);
 			
 			let range = this._max - this._min;
-			let percent = (pos - this._trackPosition.x) / this._trackSize.x;
+			let percent = (pos - this._trackPos.x) / this._trackSize.x;
 
 			this._value = Math.round(this._min + (percent * range));
 			this._handler(this._value);
@@ -170,16 +167,16 @@ class Slider extends UIObject{
 	draw(canvas){	
 		let range = this._max - this._min;
 		let percent = this._value / range;
-		this._sliderPosition.x = this._position.x + (this._trackSize.x * percent) + this._sliderSize / 2;
+		this._sliderPos.x = this._position.x + (this._trackSize.x * percent) + this._sliderSize / 2;
 	
 		canvas.fillStyle = this._trackColor;
-		canvas.fillRect(this._trackPosition.x, this._trackPosition.y, this._trackSize.x, this._trackSize.y);
+		canvas.fillRect(this._trackPos.x, this._trackPos.y, this._trackSize.x, this._trackSize.y);
 
 		canvas.fillStyle = this._trackFillColor;
-		canvas.fillRect(this._trackPosition.x, this._trackPosition.y, this._sliderPosition.x - this._trackPosition.x, this._trackSize.y);
+		canvas.fillRect(this._trackPos.x, this._trackPos.y, this._sliderPos.x - this._trackPos.x, this._trackSize.y);
 
 		canvas.fillStyle = (this._hovered === true || this._pressed === true)? this._sliderHoveredColor : this._sliderFillColor;
-		canvas.fillCircle(this._sliderPosition.x, this._sliderPosition.y, this._sliderSize);
+		canvas.fillCircle(this._sliderPos.x, this._sliderPos.y, this._sliderSize);
 	}
 }
 
