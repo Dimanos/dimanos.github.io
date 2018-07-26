@@ -44,7 +44,7 @@ class GameEngine {
 	}
 
 	_onTouchStart(event) {
-		let touchObj = event.changedTouches[0];
+		let touchObj = event.touches[0];
 		this.context2D.mouse.x = this._getMousePos(touchObj).x;
 		this.context2D.mouse.y = this._getMousePos(touchObj).y;
 		this.context2D.mouse.button = 1;
@@ -55,7 +55,7 @@ class GameEngine {
 	}
 
 	_onTouchEnd(event) {
-		let touchObj = event.changedTouches[0];
+		let touchObj = event.touches[0];
 		this.context2D.mouse.x = this._getMousePos(touchObj).x;
 		this.context2D.mouse.y = this._getMousePos(touchObj).y;
 		this.context2D.mouse.button = 1;
@@ -67,21 +67,25 @@ class GameEngine {
 	}
 
 	_onTouchMove(event) {
-		let touchObj = event.changedTouches[0];
-		this.context2D.mouse.movX = this._getMousePos(touchObj).x - this.context2D.mouse.x;
-		this.context2D.mouse.movY = this._getMousePos(touchObj).y - this.context2D.mouse.y;
-		this.context2D.mouse.x = this._getMousePos(touchObj).x;
-		this.context2D.mouse.y = this._getMousePos(touchObj).y;
+		let touchObj = event.touches[0];
+		let tempX = this._getMousePos(touchObj).x;
+		let tempY = this._getMousePos(touchObj).y;
+		this.context2D.mouse.movX = tempX - this.context2D.mouse.x;
+		this.context2D.mouse.movY = tempY - this.context2D.mouse.y;
+		this.context2D.mouse.x = tempX;
+		this.context2D.mouse.y = tempY;
 		this.context2D.mouse.move = true;
 		this.context2D.mouse.type = "touch";
 		event.preventDefault();
 	}
 
 	_onMouseMove(event) {
-		this.context2D.mouse.x = this._getMousePos(event).x;
-		this.context2D.mouse.y = this._getMousePos(event).y;
-		this.context2D.mouse.movX = event.movementX;
-		this.context2D.mouse.movY = event.movementY;
+		let tempX = this._getMousePos(event).x;
+		let tempY = this._getMousePos(event).y;
+		this.context2D.mouse.movX = tempX - this.context2D.mouse.x;
+		this.context2D.mouse.movY = tempY - this.context2D.mouse.y;
+		this.context2D.mouse.x = tempX;
+		this.context2D.mouse.y = tempY;
 		this.context2D.mouse.move = true;
 		this.context2D.mouse.type = "mouse";
 	}
