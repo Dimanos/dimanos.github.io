@@ -1,5 +1,5 @@
 //Запуск DOM элемента в полноэкранном режиме
-function launchFullScreen(element){
+function launchFullScreen(element) {
 	if (element.requestFullscreen) {
 		element.requestFullscreen();
 	} else if (element.mozRequestFullscreen) {
@@ -12,7 +12,7 @@ function launchFullScreen(element){
 }
 
 //Выход из полноэкранного режима
-function cancelFullScreen(){
+function cancelFullScreen() {
 	if (document.exitFullscreen) {
 		document.exitFullscreen();
 	} else if (document.mozCancelFullscreen) {
@@ -25,13 +25,13 @@ function cancelFullScreen(){
 }
 
 //Определяем функцию requestAnimationFrame для данного браузера, иначе возвращаем простой таймер
-let nextAnimationFrame = (function(){
-	return  window.requestAnimationFrame       || 
-			window.webkitRequestAnimationFrame || 
-			window.mozRequestAnimationFrame    || 
-			window.oRequestAnimationFrame      || 
-			window.msRequestAnimationFrame     || 
-			function(callback){
-				window.setTimeout(callback, 1000 / 60);
-			};
-  })();
+let nextAnimationFrame = (function () {
+	return window.requestAnimationFrame ||
+	window.webkitRequestAnimationFrame ||
+	window.mozRequestAnimationFrame ||
+	window.oRequestAnimationFrame ||
+	window.msRequestAnimationFrame ||
+	function (callback) {
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();

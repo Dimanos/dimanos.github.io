@@ -1,6 +1,6 @@
 let programExecute = true;
 let input = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-let test =  [1, 0, 3, 2, 5, 4, 7, 6, 9, 8];
+let test = [1, 0, 3, 2, 5, 4, 7, 6, 9, 8];
 let output = [];
 let memory = [null, null, null, null, null, 0];
 let takeValue = null;
@@ -9,159 +9,138 @@ let takeValue = null;
 //let program = ["label1", "input", "copyto 1", "input", "output", "copyfrom 1", "output", "jump label1"];
 
 //Интерпретация пользовательского алгоритма
-function Parser(code){
+function Parser(code) {
 	//Количество инструкций в программе
 	let programLength = code.length;
-	//Ассоциативный массив с позициями всех меток в коде, к которым может осуществляться переход 
+	//Ассоциативный массив с позициями всех меток в коде, к которым может осуществляться переход
 	let labelMap = new Map();
 	//Позиция с которой будет выполняться программа
 	let programStart = 0;
 
 	//Перебираем все инструкции в программе и ищем метки. Это нужно чтобы было удобно переходить по меткам в дальнейшем
-	for(let i = 0; i < programLength; ++i){
-		
+	for (let i = 0; i < programLength; ++i) {
+
 		//Если данная инструкция начинается со строки label...
-		if(code[i].indexOf("label") === 0){
+		if (code[i].indexOf("label") === 0) {
 			//То добавляем пару {метка: позиция} в массив
 			labelMap.set(code[i], i);
 		}
 	}
-	
-	do{
+
+	do {
 		//Интерпретация программы. Перебор инструкций
-		for(let i = programStart; i < programLength; ++i){
-			
-			if (code[i] == "input"){
+		for (let i = programStart; i < programLength; ++i) {
+
+			if (code[i] == "input") {
 				takeValue = input.pop();
-					
-				if(takeValue === undefined){
+
+				if (takeValue === undefined) {
 					programExecute = false;
-				}
-				else{
+				} else {
 					console.log("Взял " + takeValue.toString());
 				}
-			}
-			else if (code[i] == "output"){
-				
-				if (takeValue !== null && takeValue !== undefined){
+			} else if (code[i] == "output") {
+
+				if (takeValue !== null && takeValue !== undefined) {
 					console.log("Вывел " + takeValue.toString());
 					output.push(takeValue);
-				}
-				else{
+				} else {
 					programExecute = false;
 					console.log("Нечего отдавать.");
 				}
-				
+
 				let testNumber = (test.length - 1) - (output.length - 1);
-				
-				if (test[testNumber] != output[output.length - 1]){
+
+				if (test[testNumber] != output[output.length - 1]) {
 					programExecute = false;
 					console.log("Неправильно!");
 				}
-			}
-			else if (code[i].indexOf("inc") === 0){
+			} else if (code[i].indexOf("inc") === 0) {
 				let cellNumber = parseInt(code[i].split(" ")[1]);
-				
-				if (memory[cellNumber] !== null){
+
+				if (memory[cellNumber] !== null) {
 					++memory[cellNumber];
 					console.log("Увеличил значение в ячейке " + cellNumber.toString() + " на 1, стало " + memory[cellNumber].toString());
-				}
-				else{
+				} else {
 					programExecute = false;
 					console.log("Ячейка пуста. Увеличивать нечего.");
 				}
-			}
-			else if (code[i].indexOf("dec") === 0){
+			} else if (code[i].indexOf("dec") === 0) {
 				let cellNumber = parseInt(code[i].split(" ")[1]);
-				
-				if (memory[cellNumber] !== null){
+
+				if (memory[cellNumber] !== null) {
 					--memory[cellNumber];
 					console.log("Уменьшил значение в ячейке " + cellNumber.toString() + " на 1, стало " + memory[cellNumber].toString());
-				}
-				else{
+				} else {
 					programExecute = false;
 					console.log("Ячейка пуста. Уменьшать нечего.");
 				}
-			}
-			else if (code[i].indexOf("copyto") === 0){
+			} else if (code[i].indexOf("copyto") === 0) {
 				let cellNumber = parseInt(code[i].split(" ")[1]);
-				
-				if (takeValue !== null && takeValue !== undefined){
+
+				if (takeValue !== null && takeValue !== undefined) {
 					memory[cellNumber] = takeValue;
 					console.log("Положил в ячейку " + cellNumber.toString() + " значение " + memory[cellNumber].toString());
-				}
-				else{
+				} else {
 					programExecute = false;
 					console.log("Мне нечего положить сюда.");
 				}
-			}
-			else if (code[i].indexOf("copyfrom") === 0){
+			} else if (code[i].indexOf("copyfrom") === 0) {
 				let cellNumber = parseInt(code[i].split(" ")[1]);
-				
-				if (memory[cellNumber] !== null){
+
+				if (memory[cellNumber] !== null) {
 					takeValue = memory[cellNumber];
 					console.log("Взял из ячейки " + cellNumber.toString() + " значение " + memory[cellNumber].toString());
-				}
-				else{
+				} else {
 					programExecute = false;
 					console.log("Тут пусто.");
 				}
 				console.log("У меня " + takeValue.toString());
-			}
-			else if (code[i].indexOf("add") === 0){
+			} else if (code[i].indexOf("add") === 0) {
 				let cellNumber = parseInt(code[i].split(" ")[1]);
-				
-				if (memory[cellNumber] !== null){
+
+				if (memory[cellNumber] !== null) {
 					console.log("Сложил");
 					takeValue += memory[cellNumber];
-				}
-				else{
+				} else {
 					programExecute = false;
 					console.log("Тут пусто.");
 				}
 				console.log("У меня " + takeValue.toString());
-			}
-			else if (code[i].indexOf("sub") === 0){
+			} else if (code[i].indexOf("sub") === 0) {
 				let cellNumber = parseInt(code[i].split(" ")[1]);
-								
-				if (memory[cellNumber] !== null){
+
+				if (memory[cellNumber] !== null) {
 					takeValue -= memory[cellNumber];
 					console.log("Вычел");
-				}
-				else{
+				} else {
 					programExecute = false;
 					console.log("Тут пусто.");
 				}
 				console.log("У меня " + takeValue.toString());
-			}
-			else if (code[i].indexOf("if zero") === 0){
-				if (takeValue === 0){
+			} else if (code[i].indexOf("if zero") === 0) {
+				if (takeValue === 0) {
 					let label = code[i].split(" ")[2];
 					programStart = labelMap.get(label) + 1;
 					break;
 				}
-			}
-			else if (code[i].indexOf("if negative") === 0){
-				if (takeValue < 0){
+			} else if (code[i].indexOf("if negative") === 0) {
+				if (takeValue < 0) {
 					let label = code[i].split(" ")[2];
 					programStart = labelMap.get(label) + 1;
 					break;
 				}
-			}
-			else if (code[i].indexOf("jump") === 0){
+			} else if (code[i].indexOf("jump") === 0) {
 				let label = code[i].split(" ")[1];
 				programStart = labelMap.get(label) + 1;
 				break;
 			}
-			
-			if(!programExecute && input.length === 0){
+
+			if (!programExecute && input.length === 0) {
 				console.log("Всё верно!");
 				programStart = 0;
 				break;
 			}
 		}
-	} while(programStart !== 0 && programExecute);
+	} while (programStart !== 0 && programExecute);
 }
-
-//Parser(program);
-//console.log(output);
