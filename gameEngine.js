@@ -13,27 +13,27 @@ class GameEngine {
 
 	_setupCanvas() {
 		this.context2D.mouse = {
-			x: 0,
-			y: 0,
-			movX: 0,
-			movY: 0,
-			click: false,
-			down: false,
+			x:       0,
+			y:       0,
+			movX:    0,
+			movY:    0,
+			click:   false,
+			down:    false,
 			pressed: false,
-			up: false,
-			move: false,
-			button: 0,
-			type: "mouse"
+			up:      false,
+			move:    false,
+			button:  0,
+			type:    "mouse"
 		};
 
 		this.context2D.size = new Vec2(this._canvasRect.width, this._canvasRect.height);
 
-		this._canvas.addEventListener("mousemove", this._onMouseMove.bind(this), false);
-		this._canvas.addEventListener("mousedown", this._onMouseDown.bind(this), false);
-		this._canvas.addEventListener("mouseup", this._onMouseUp.bind(this), false);
+		this._canvas.addEventListener("mousemove",  this._onMouseMove.bind(this),  false);
+		this._canvas.addEventListener("mousedown",  this._onMouseDown.bind(this),  false);
+		this._canvas.addEventListener("mouseup",    this._onMouseUp.bind(this),    false);
 		this._canvas.addEventListener("touchstart", this._onTouchStart.bind(this), false);
-		this._canvas.addEventListener("touchend", this._onTouchEnd.bind(this), false);
-		this._canvas.addEventListener("touchmove", this._onTouchMove.bind(this), false);
+		this._canvas.addEventListener("touchend",   this._onTouchEnd.bind(this),   false);
+		this._canvas.addEventListener("touchmove",  this._onTouchMove.bind(this),  false);
 	}
 
 	_getMousePos(event) {
@@ -44,72 +44,73 @@ class GameEngine {
 	}
 
 	_onTouchStart(event) {
-		let touchObj = event.touches[0];
-		this.context2D.mouse.x = this._getMousePos(touchObj).x;
-		this.context2D.mouse.y = this._getMousePos(touchObj).y;
-		this.context2D.mouse.button = 1;
-		this.context2D.mouse.down = true;
-		this.context2D.mouse.up = false;
-		this.context2D.mouse.type = "touch";
+		let touchObj                 = event.touches[0];
+		let mousePos                 = this._getMousePos(touchObj);
+		this.context2D.mouse.x       = mousePos.x;
+		this.context2D.mouse.y       = mousePos.y;
+		this.context2D.mouse.button  = 1;
+		this.context2D.mouse.down    = true;
+		this.context2D.mouse.pressed = true;
+		this.context2D.mouse.up      = false;
+		this.context2D.mouse.type    = "touch";
 		event.preventDefault();
 	}
 
 	_onTouchEnd(event) {
-		let touchObj = event.touches[0];
-		this.context2D.mouse.x = this._getMousePos(touchObj).x;
-		this.context2D.mouse.y = this._getMousePos(touchObj).y;
-		this.context2D.mouse.button = 1;
-		this.context2D.mouse.down = false;
-		this.context2D.mouse.up = true;
-		this.context2D.mouse.click = true;
-		this.context2D.mouse.type = "touch";
+		let touchObj                 = event.touches[0];
+		let mousePos                 = this._getMousePos(touchObj);
+		this.context2D.mouse.x       = mousePos.x;
+		this.context2D.mouse.y       = mousePos.y;
+		this.context2D.mouse.button  = 1;
+		this.context2D.mouse.pressed = false;
+		this.context2D.mouse.up      = true;
+		this.context2D.mouse.click   = true;
+		this.context2D.mouse.type    = "touch";
 		event.preventDefault();
 	}
 
 	_onTouchMove(event) {
-		let touchObj = event.touches[0];
-		let tempX = this._getMousePos(touchObj).x;
-		let tempY = this._getMousePos(touchObj).y;
-		this.context2D.mouse.movX = tempX - this.context2D.mouse.x;
-		this.context2D.mouse.movY = tempY - this.context2D.mouse.y;
-		this.context2D.mouse.x = tempX;
-		this.context2D.mouse.y = tempY;
+		let touchObj              = event.touches[0];
+		let mousePos              = this._getMousePos(touchObj);
+		this.context2D.mouse.movX = mousePos.x - this.context2D.mouse.x;
+		this.context2D.mouse.movY = mousePos.y - this.context2D.mouse.y;
+		this.context2D.mouse.x    = mousePos.x;
+		this.context2D.mouse.y    = mousePos.y;
 		this.context2D.mouse.move = true;
 		this.context2D.mouse.type = "touch";
 		event.preventDefault();
 	}
 
 	_onMouseMove(event) {
-		let tempX = this._getMousePos(event).x;
-		let tempY = this._getMousePos(event).y;
-		this.context2D.mouse.movX = tempX - this.context2D.mouse.x;
-		this.context2D.mouse.movY = tempY - this.context2D.mouse.y;
-		this.context2D.mouse.x = tempX;
-		this.context2D.mouse.y = tempY;
+		let mousePos              = this._getMousePos(event);
+		this.context2D.mouse.movX = mousePos.x - this.context2D.mouse.x;
+		this.context2D.mouse.movY = mousePos.y - this.context2D.mouse.y;
+		this.context2D.mouse.x    = mousePos.x;
+		this.context2D.mouse.y    = mousePos.y;
 		this.context2D.mouse.move = true;
 		this.context2D.mouse.type = "mouse";
 	}
 
 	_onMouseDown(event) {
-		this.context2D.mouse.button = event.which;
-		this.context2D.mouse.down = true;
+		this.context2D.mouse.button  = event.which;
+		this.context2D.mouse.down    = true;
 		this.context2D.mouse.pressed = true;
-		this.context2D.mouse.up = false;
-		this.context2D.mouse.type = "mouse";
+		this.context2D.mouse.up      = false;
+		this.context2D.mouse.type    = "mouse";
 	}
 
 	_onMouseUp(event) {
-		this.context2D.mouse.button = event.which;
+		this.context2D.mouse.button  = event.which;
 		this.context2D.mouse.pressed = false;
-		this.context2D.mouse.up = true;
-		this.context2D.mouse.click = true;
-		this.context2D.mouse.type = "mouse";
+		this.context2D.mouse.up      = true;
+		this.context2D.mouse.click   = true;
+		this.context2D.mouse.type    = "mouse";
 	}
 
 	_mouseEventReset() {
-		this.context2D.mouse.down = false;
-		this.context2D.mouse.move = false;
-		this.context2D.mouse.click = false;
+		this.context2D.mouse.down   = false;
+		this.context2D.mouse.move   = false;
+		this.context2D.mouse.click  = false;
 		this.context2D.mouse.button = 0;
 	}
 
